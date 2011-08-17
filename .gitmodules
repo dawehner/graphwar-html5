@@ -1,0 +1,6 @@
+[submodule "fabric.js"]
+	path = fabric.js
+	url = /home/dawehner/www/gw/fabric.js
+[submodule "js-expression-eval"]
+	path = js-expression-eval
+	url = /home/dawehner/www/gw/js-expression-eval

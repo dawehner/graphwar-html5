@@ -4,3 +4,6 @@
 [submodule "js-expression-eval"]
 	path = js-expression-eval
 	url = /home/dawehner/www/gw/js-expression-eval
+[submodule "jquery"]
+	path = jquery
+	url = /home/dawehner/www/gw/jquery

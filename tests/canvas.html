@@ -1,13 +1,20 @@
 <html>
 <head>
+
 <title>Canvas tutorial</title>
+
+<script src="../jquery/dist/jquery.js" type="text/javascript"></script>
 <script src="../fabric.js/dist/all.js" type="text/javascript"></script> 
 <script src="../js/gw.js" type="text/javascript"></script>
 <script src="../js-expression-eval/parser.js" type="text/javascript"></script> 
+<script src="../fabric.js/lib/fonts/Delicious_500.font.js" type="text/javascript"></script>
+
 <script type="text/javascript">
+g = {};
 function draw() {
-var gwMain = new gw.mainObject(175,175);
-alert(Parser.evaluate("2 ^ x", { x: 3 }));
+  g = new gw.mainObject(800,600);
+  // gwMain.testRect();
+  g.render();
 }
 </script>
 <style type="text/css">
@@ -15,6 +22,9 @@ canvas { border: 2px solid red; }
 </style>
 </head>
 <body onLoad="draw();">
-<canvas id="gw-canvas" width="175" height="175"></canvas>
+  <canvas id="gw-canvas" width="800" height="600"></canvas>
+  <label>Function:</label>
+  <input id="function-input" type="text" />
+  <input id="function-submit" type="submit" value="Submit" />
 </body>
 </html>

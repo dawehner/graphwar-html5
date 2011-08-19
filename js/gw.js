@@ -10,9 +10,14 @@ gw.mainObject = function(width, height) {
   this.playground.drawCordSystem();
 //   this.playground.drawFunction(10, 100, 20);
 
+  this.players = [new gw.player(this.playground, "foo1"), new gw.player(this.playground, "foo2")];
+  this.players[0].drawShooters();
+  this.players[1].drawShooters();
+
   // Setup config
   this.settings = {
-    functionLength: 100,
+    functionLength: this.canvas.width,
+    functionLines: true,
   };
 };
 
@@ -35,11 +40,53 @@ gw.mainObject.prototype.setWidth = function(width) {
   this.width = width;
 };
 
-gw.player = function(name, icon, color) { };
+gw.player = function(playground, name, icon, color) {
+  this.name = name;
+  this.icon = icon;
+  this.color = color;
+  this.playground = playground
 
-gw.shooter = function(player) {
-  this.player = player;
+  this.shooters = [];
+  this.shooters[0] = new gw.shooter(this, this.playground);
 };
+
+gw.player.prototype.drawShooters = function() {
+  for (i = 0; i < this.shooters.size; i++) {
+    this.shooters[i].draw();
+  }
+};
+
+gw.shooter = function(player, playground) {
+  this.player = player;
+  this.playground = playground;
+  this.icon = new gw.shooterIcon(this, this.playground, undefined, Math.random() * 100, Math.random() * 100);
+};
+
+gw.shooter.draw = function() {
+  this.icon.draw();
+};
+// gw.shooter.addPlayground = addPlayground;
+
+
+gw.shooterIcon = function(shooter, playground, icon, x, y) {
+  this.shooter = shooter;
+  this.playground = playground;
+
+  if (icon == undefined) {
+    icon = "images/face-smile.png"
+  }
+  this.imagepath = icon;
+
+  this.posx = x;
+  this.posy = y;
+  this.image = undefined;
+};
+
+gw.shooterIcon.draw = function() {
+  this.image = new fabric.Image.fromURL(this.imagepath);
+  this.playground.add(this.image);
+};
+// gw.shooterIcon.addPlayground = addPlayground;
 
 gw.executeFunction = function(expression) { };
 
@@ -69,8 +116,15 @@ gw.playground = function(mainObject, playwidth, width, playheight, height, top, 
   this.left = left;
 };
 
+addPlayground = function(element) {
+  this.playground = element;
+};
+
+gw.playground.prototype.add = function(element) {
+  this.canvas.add(element);
+};
+
 gw.playground.prototype.drawCordSystem = function() {
-  console.log(this);
   this.xline = new fabric.Line([this.left, this.top + this.height/2,
                                this.left + this.width, this.top + this.height/2]);
   this.yline = new fabric.Line([this.left + this.width/2, this.top,
@@ -99,32 +153,60 @@ gw.playground.prototype.render = function() {
 }
 
 gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
+  if (xstart == undefined) {
+    xstart = 0;
+  }
+  if (xend == undefined) {
+    xend = this.playwidth;
+  }
   if (steps == undefined) {
     steps = this.main.settings.functionLength;
   }
 
   var i = 0;
-  var step_size = (xend-xstart)/steps
-  for (i = 0; i <= steps; i++) {
+  var step_size = (xend-xstart)/steps;
+  this.circles = [];
+  this.lines = [];
+
+  this.canvas.renderOnAddition = false;
+  for (i = 0; i <= this.canvas.width; i++) {
     x = xstart + step_size * i;
     y = express.evaluate({x: x});
 
-    this.canvas.add(new fabric.Circle({
-      left: this.left + this.getFuncLeft(x),
-      top: this.top + this.getFuncTop(y),
-      fill: '#000000', 
+    this.circles[i] = circle = new fabric.Circle({
+      left: this.getFuncLeft(x),
+      top: this.getFuncTop(y),
+      fill: '#000000',
       radius: 1,
       selectable: false,
-    }));
+    });
+    this.canvas.add(circle);
+
+    // Add line from the previous point to the current point.
+    // The first point has no previous point.
+    if (this.main.settings.functionLines && i > 0) {
+      this.lines[i] = line = new fabric.Line([this.circles[i-1].left, this.circles[i-1].top, this.circles[i].left, this.circles[i].top]);
+      this.canvas.add(line);
+    }
+  };
+
+  this.canvas.renderAll();
+};
+
+gw.playground.prototype.deleteFunction = function() {
+  this.canvas.renderOnAddition = false;
+
+  for (i = 0; i <= this.circles.size(); i++) {
+    this.cir
   }
 };
 
 gw.playground.prototype.getFuncLeft = function(x) {
-  return x*(200/(this.playwidth/2)) + this.getMiddleX() ;
+  return (x/100)*(this.width/2) + this.getMiddleX();
 };
 
 gw.playground.prototype.getFuncTop = function(y) {
-  return this.getMiddleY() - y*(200/(this.playheight/2));
+  return this.getMiddleY() - (y/100)*(this.height/2);
 };
 
 gw.playground.prototype.getMiddleX = function() {
@@ -133,17 +215,6 @@ gw.playground.prototype.getMiddleX = function() {
 
 gw.playground.prototype.getMiddleY = function() {
   return this.top + this.height/2;
-};
-
-gw.shooterIcon = function(shooter, icon, x, y) {
-  this.shooter = shooter;
-
-  if (icon == undefined) {
-    icon = "images/face-smile.png"
-  }
-
-  this.posx = x;
-  this.posy = y;
 };
 
 

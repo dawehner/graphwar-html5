@@ -18,6 +18,7 @@ gw.mainObject = function(width, height) {
   this.settings = {
     functionLength: this.canvas.width,
     functionLines: true,
+    functionCollisionBorderStop: true,
   };
 };
 
@@ -172,10 +173,12 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
   for (i = 0; i <= this.canvas.width; i++) {
     x = xstart + step_size * i;
     y = express.evaluate({x: x});
+    left = this.getFuncLeft(x);
+    top = this.getFuncTop(y);
 
     this.circles[i] = circle = new fabric.Circle({
-      left: this.getFuncLeft(x),
-      top: this.getFuncTop(y),
+      left: left,
+      top: top,
       fill: '#000000',
       radius: 1,
       selectable: false,
@@ -186,7 +189,16 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     // The first point has no previous point.
     if (this.main.settings.functionLines && i > 0) {
       this.lines[i] = line = new fabric.Line([this.circles[i-1].left, this.circles[i-1].top, this.circles[i].left, this.circles[i].top]);
+      line.selectable = false;
       this.canvas.add(line);
+    }
+
+    // Detect collision with borders.
+    if (this.main.settings.functionCollisionBorderStop) {
+      if ((top < this.top) || (top > (this.top + this.height))) {
+        console.log(123);
+        break;
+      }
     }
   };
 

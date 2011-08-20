@@ -173,12 +173,10 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
   for (i = 0; i <= this.canvas.width; i++) {
     x = xstart + step_size * i;
     y = express.evaluate({x: x});
-    left = this.getFuncLeft(x);
-    top = this.getFuncTop(y);
 
     this.circles[i] = circle = new fabric.Circle({
-      left: left,
-      top: top,
+      left: this.getFuncLeft(x),
+      top: this.getFuncTop(y),
       fill: '#000000',
       radius: 1,
       selectable: false,
@@ -195,8 +193,7 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
 
     // Detect collision with borders.
     if (this.main.settings.functionCollisionBorderStop) {
-      if ((top < this.top) || (top > (this.top + this.height))) {
-        console.log(123);
+      if (Math.abs(y) > this.playheight) {
         break;
       }
     }

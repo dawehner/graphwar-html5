@@ -146,8 +146,17 @@ gw.playground.prototype.regenerateObstacles = function() {
   return this.randomObstacles(10);
 };
 
-gw.playground.prototype.randomObstacles = function(count) {
+gw.playground.prototype.randomObstacles = function(count, seed) {
   this.canvas.renderOnAddition = false;
+
+  if (seed) {
+    Math.seedrandom(seed);
+  }
+  else {
+    var seed = Math.seedrandom();
+  }
+  console.log("generate obstacles with seed:" + seed);
+
   for (i = 0; i < count; i++) {
     var circle = new fabric.Circle({
       left: Math.random() * this.width,

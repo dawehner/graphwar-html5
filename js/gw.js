@@ -273,11 +273,11 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
 gw.playground.prototype.collideLineCircle = function(xm, ym, r, line) {
   // Calc the line elements.
   var m = (line.y2 - line.y1) / (line.x2 - line.x1);
-  var ma = y1 - m * line.x1;
+  var ma = line.y1 - m * line.x1;
 
-  var a = 1 + pow(m, 2.0);
+  var a = 1 + Math.pow(m, 2.0);
   var b = - 2 * xm + 2 * m * ma - 2 * m * ym;
-  var c = pow((ma - ym), 2.0);
+  var c = Math.pow((ma - ym), 2.0);
 
   var D = Math.pow(b, 2.0) - 4 * a * c;
 

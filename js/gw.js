@@ -115,6 +115,10 @@ gw.playground = function(mainObject, playwidth, width, playheight, height, top, 
   this.playheight = playheight;
   this.top = top;
   this.left = left;
+
+  // The circles which blocks the way
+  this.obstacles = [];
+  this.obstaclesHits = [];
 };
 
 addPlayground = function(element) {
@@ -124,6 +128,32 @@ addPlayground = function(element) {
 gw.playground.prototype.add = function(element) {
   this.canvas.add(element);
 };
+
+gw.playground.prototype.clearObstacles = function() {
+  for (i = 0; i < this.obstacles.length; i++) {
+    this.canvas.remove(this.obstacles[i].circle);
+  }
+};
+
+gw.playground.prototype.regenerateObstacles = function() {
+  this.clearObstacles();
+  return this.randomObstacles(10);
+};
+
+gw.playground.prototype.randomObstacles = function(count) {
+  for (i = 0; i < count; i++) {
+    var circle = new fabric.Circle({
+      left: Math.random() * this.width,
+      top: Math.random() * this.height,
+      fill: '#000000',
+      radius: Math.random()*30,
+      selectable: false,
+    });
+    this.obstacles.push(new gw.obstacle(circle));
+    console.log(circle);
+    this.canvas.add(circle);
+  }
+}
 
 gw.playground.prototype.drawCordSystem = function() {
   this.xline = new fabric.Line([this.left, this.top + this.height/2,
@@ -226,6 +256,11 @@ gw.playground.prototype.getMiddleY = function() {
   return this.top + this.height/2;
 };
 
+gw.obstacle = function(circle) {
+  this.hits = [];
+  this.circle = circle;
+};
+
 
 /**
  * The jquery part.
@@ -237,6 +272,13 @@ $(document).ready(function() {
 
     var expr = Parser.parse(func);
     g.playground.drawFunction(expr, -100, 100);
+  });
+  $("#obstacles-clear").click(function() {
+    g.playground.clearObstacles();
+  });
+
+  $("#obstacles-regenerate").click(function() {
+    g.playground.regenerateObstacles();
   });
 });
 })(jQuery);

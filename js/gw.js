@@ -259,9 +259,11 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     // Detect collision with obstacles.
     if (this.main.settings.functionCollisionObstacleStop && line) {
       for (var j = 0; j < this.obstacles.length; j++) {
-        var foo = this.collideLineCircle(this.obstacles[j].left, this.obstacles[j].top, this.obstacles[j].circle.radius, line);
+        var foo = this.collideLineCircle(this.obstacles[j].circle.left, this.obstacles[j].circle.top, this.obstacles[j].circle.radius, line);
         if (foo) {
-          console.log("collsion")
+          console.log("collision");
+          console.log(this.obstacles[j]);
+          break_on_next = true;
         }
         else {
           console.log("no-collision");
@@ -306,6 +308,7 @@ gw.playground.prototype.collideLineCircle = function(xm, ym, r, line) {
 
   if (D >= 0) {
     var x1 = (- b + Math.sqrt(D))/(2 * a);
+    var y1 = ma + m*x1;
     return [x1, y1];
   }
   else {

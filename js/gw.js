@@ -291,6 +291,8 @@ gw.playground.prototype.collideLineCircle = function(xm, ym, r, line) {
 
   var a = 1 + Math.pow(m, 2.0);
   var b = - 2 * xm + 2 * m * ma - 2 * m * ym;
+  // @todo:
+  // xm seems missing
   var c = Math.pow((ma - ym), 2.0);
 
   var D = Math.pow(b, 2.0) - 4 * a * c;

@@ -141,9 +141,9 @@ gw.playground.prototype.clearObstacles = function() {
   }
 };
 
-gw.playground.prototype.regenerateObstacles = function() {
+gw.playground.prototype.regenerateObstacles = function(seed) {
   this.clearObstacles();
-  return this.randomObstacles(10);
+  return this.randomObstacles(10, seed);
 };
 
 gw.playground.prototype.randomObstacles = function(count, seed) {
@@ -345,7 +345,7 @@ $(document).ready(function() {
   });
 
   $("#obstacles-regenerate").click(function() {
-    g.playground.regenerateObstacles();
+    g.playground.regenerateObstacles($("#obstacles-random-seed").val());
   });
 });
 })(jQuery);

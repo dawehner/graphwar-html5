@@ -1,5 +1,11 @@
 var gw = gw || {};
 
+/**
+ * @todo
+ * - Decide what to do with x/y vs. top/left:
+ *   Currently the problem is that the canvas element uses top/left internally but the function itself
+ *   uses x/y, which format should be used at the end.
+ */
 
 gw.mainObject = function(width, height) {
   this.width = width;
@@ -19,6 +25,7 @@ gw.mainObject = function(width, height) {
     functionLength: this.canvas.width,
     functionLines: true,
     functionCollisionBorderStop: true,
+    functionCollisionObstacleStop: true,
   };
 };
 
@@ -118,7 +125,6 @@ gw.playground = function(mainObject, playwidth, width, playheight, height, top, 
 
   // The circles which blocks the way
   this.obstacles = [];
-  this.obstaclesHits = [];
 };
 
 addPlayground = function(element) {
@@ -201,15 +207,18 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
   this.circles = [];
   this.lines = [];
   var break_on_next = false;
+  var line = undefined;
 
   this.canvas.renderOnAddition = false;
   for (i = 0; i <= this.canvas.width; i++) {
     x = xstart + step_size * i;
     y = express.evaluate({x: x});
+    var funcLeft =this.getFuncLeft(x);
+    var funcTop = this.getFuncTop(y);
 
     this.circles[i] = circle = new fabric.Circle({
-      left: this.getFuncLeft(x),
-      top: this.getFuncTop(y),
+      left: funcLeft,
+      top: funcTop,
       fill: '#000000',
       radius: 1,
       selectable: false,
@@ -234,12 +243,54 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     // Detect collision with borders.
     if (this.main.settings.functionCollisionBorderStop) {
       if (Math.abs(y) > this.playheight) {
-        break_on_next = true;
+        console.log("Collision-Border + x:" + x + " y:" + y);
+//         break_on_next = true;
+      }
+    }
+
+    // Detect collision with obstacles.
+    if (this.main.settings.functionCollisionObstacleStop && line) {
+      for (i = 0; i < this.obstacles.length; i++) {
+        console.log(this.collideLineCircle(this.obstacles[i].left, this.obstacles[i].top, this.obstacles[i].circle.radius, line));
+//         this.obstacles[i].circle.top;
+//         this.obstacles[i].circle.left;
+//         this.obstacles[i].circle.radius;
       }
     }
   };
 
   this.canvas.renderAll();
+};
+
+/**
+ * Calculate the intersection between a line and a circle.
+ *
+ * Therefore the line elements(m, a) are generated, then the solutions of the following two equations are found.
+ *
+ * (x - xm)^2 + (y - ym)^2 = r^2
+ * y = mx + ma
+ *
+ * First check D to be sure that a real solution exists.
+ * If there is one go further and calculate the x position.
+ */
+gw.playground.prototype.collideLineCircle = function(xm, ym, r, line) {
+  // Calc the line elements.
+  var m = (line.y2 - line.y1) / (line.x2 - line.x1);
+  var ma = y1 - m * line.x1;
+
+  var a = 1 + pow(m, 2.0);
+  var b = - 2 * xm + 2 * m * ma - 2 * m * ym;
+  var c = pow((ma - ym), 2.0);
+
+  var D = Math.pow(b, 2.0) - 4 * a * c;
+
+  if (D >= 0) {
+    var x1 = (- b + Math.sqrt(D))/(2 * a);
+    return [x1, y1];
+  }
+  else {
+    return false;
+  }
 };
 
 gw.playground.prototype.deleteFunction = function() {

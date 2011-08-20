@@ -200,6 +200,7 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
   var step_size = (xend-xstart)/steps;
   this.circles = [];
   this.lines = [];
+  var break_on_next = false;
 
   this.canvas.renderOnAddition = false;
   for (i = 0; i <= this.canvas.width; i++) {
@@ -223,10 +224,17 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
       this.canvas.add(line);
     }
 
+    if (break_on_next) {
+      break;
+    }
+
+    // End of drawing start on the collisition detection system.
+
+
     // Detect collision with borders.
     if (this.main.settings.functionCollisionBorderStop) {
       if (Math.abs(y) > this.playheight) {
-        break;
+        break_on_next = true;
       }
     }
   };

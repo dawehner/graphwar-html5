@@ -211,7 +211,6 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     steps = this.main.settings.functionLength;
   }
 
-  var i = 0;
   var step_size = (xend-xstart)/steps;
   this.circles = [];
   this.lines = [];
@@ -237,7 +236,9 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     // Add line from the previous point to the current point.
     // The first point has no previous point.
     if (this.main.settings.functionLines && i > 0) {
-      this.lines[i] = line = new fabric.Line([this.circles[i-1].left, this.circles[i-1].top, this.circles[i].left, this.circles[i].top]);
+      console.log(i);
+      this.lines[i] = line = new fabric.Line([this.circles[i-1].left, this.circles[i-1].top,
+                                              this.circles[i].left, this.circles[i].top]);
       line.selectable = false;
       this.canvas.add(line);
     }
@@ -259,8 +260,11 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
 
     // Detect collision with obstacles.
     if (this.main.settings.functionCollisionObstacleStop && line) {
-      for (var j = 0; i < this.obstacles.length; i++) {
-        console.log(this.collideLineCircle(this.obstacles[j].left, this.obstacles[j].top, this.obstacles[j].circle.radius, line));
+      for (var j = 0; j < this.obstacles.length; j++) {
+        var foo = this.collideLineCircle(this.obstacles[j].left, this.obstacles[j].top, this.obstacles[j].circle.radius, line);
+        if (foo) {
+          console.log(foo);
+        }
       }
     }
   };

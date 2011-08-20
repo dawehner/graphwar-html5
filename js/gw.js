@@ -141,6 +141,7 @@ gw.playground.prototype.regenerateObstacles = function() {
 };
 
 gw.playground.prototype.randomObstacles = function(count) {
+  this.canvas.renderOnAddition = false;
   for (i = 0; i < count; i++) {
     var circle = new fabric.Circle({
       left: Math.random() * this.width,
@@ -153,6 +154,7 @@ gw.playground.prototype.randomObstacles = function(count) {
     console.log(circle);
     this.canvas.add(circle);
   }
+  this.canvas.renderAll();
 }
 
 gw.playground.prototype.drawCordSystem = function() {

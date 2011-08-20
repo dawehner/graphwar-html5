@@ -281,6 +281,13 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
  * (x - xm)^2 + (y - ym)^2 = r^2
  * y = mx + ma
  *
+ * =>
+ * x^2 - 2 x * xm + xm^2 + (m*x + ma - ym)^2 - r^2 = 0
+ * =>
+ * x^2 - 2 x * xm + xm^2 + m^2*x^2 + 2 * m*x*(ma - ym) + (ma - ym)^2 - r^2 = 0;
+ * =>
+ * x^2 + m^2*x^2 - 2 x * xm + 2 * m*x*(ma - ym) + (ma - ym)^2 - r^2  + xm^2 = 0;
+ *
  * First check D to be sure that a real solution exists.
  * If there is one go further and calculate the x position.
  */

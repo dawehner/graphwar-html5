@@ -1,3 +1,14 @@
 This project tries to rewrite graphwar [1] based on html5, javascript and canvas.
 
+Used libraries:
+
+* Fabric.js [2]
+* Jquery [3]
+* js parser [4]
+
+Thanks for all this flexible tools
+
 [1] http://www.graphwar.com/
+[2] = git://github.com/kangax/fabric.js.git
+[3] = https://github.com/jquery/jquery.git
+[4] = https://github.com/silentmatt/js-expression-eval.git

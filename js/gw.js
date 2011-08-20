@@ -166,7 +166,6 @@ gw.playground.prototype.randomObstacles = function(count, seed) {
       selectable: false,
     });
     this.obstacles.push(new gw.obstacle(circle));
-    console.log(circle);
     this.canvas.add(circle);
   }
   this.canvas.renderAll();
@@ -236,7 +235,6 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     // Add line from the previous point to the current point.
     // The first point has no previous point.
     if (this.main.settings.functionLines && i > 0) {
-      console.log(i);
       this.lines[i] = line = new fabric.Line([this.circles[i-1].left, this.circles[i-1].top,
                                               this.circles[i].left, this.circles[i].top]);
       line.selectable = false;
@@ -263,7 +261,10 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
       for (var j = 0; j < this.obstacles.length; j++) {
         var foo = this.collideLineCircle(this.obstacles[j].left, this.obstacles[j].top, this.obstacles[j].circle.radius, line);
         if (foo) {
-          console.log(foo);
+          console.log("collsion")
+        }
+        else {
+          console.log("no-collision");
         }
       }
     }

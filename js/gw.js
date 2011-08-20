@@ -210,7 +210,7 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
   var line = undefined;
 
   this.canvas.renderOnAddition = false;
-  for (i = 0; i <= this.canvas.width; i++) {
+  for (var i = 0; i <= this.canvas.width; i++) {
     x = xstart + step_size * i;
     y = express.evaluate({x: x});
     var funcLeft =this.getFuncLeft(x);
@@ -244,17 +244,14 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
     if (this.main.settings.functionCollisionBorderStop) {
       if (Math.abs(y) > this.playheight) {
         console.log("Collision-Border + x:" + x + " y:" + y);
-//         break_on_next = true;
+        break_on_next = true;
       }
     }
 
     // Detect collision with obstacles.
     if (this.main.settings.functionCollisionObstacleStop && line) {
-      for (i = 0; i < this.obstacles.length; i++) {
-        console.log(this.collideLineCircle(this.obstacles[i].left, this.obstacles[i].top, this.obstacles[i].circle.radius, line));
-//         this.obstacles[i].circle.top;
-//         this.obstacles[i].circle.left;
-//         this.obstacles[i].circle.radius;
+      for (var j = 0; i < this.obstacles.length; i++) {
+        console.log(this.collideLineCircle(this.obstacles[j].left, this.obstacles[j].top, this.obstacles[j].circle.radius, line));
       }
     }
   };

@@ -98,6 +98,7 @@ gw.shooterIcon.prototype.draw = function() {
   fabric.Image.fromURL(this.imagepath, function(img) {
     img.set('left', shooterIcon.left);
     img.set('top', shooterIcon.top);
+    img.set('selectable', false);
     playground.canvas.add(img);
     shooterIcon.image = img;
   });

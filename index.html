@@ -10,11 +10,12 @@
 <script src="js-expression-eval/parser.js" type="text/javascript"></script>
 <script src="fabric.js/lib/fonts/Delicious_500.font.js" type="text/javascript"></script>
 
+<link rel="stylesheet" href="css/gw.css" type="text/css" />
+
 <script type="text/javascript">
 g = {};
 function draw() {
   g = new gw.mainObject(800,600);
-  // gwMain.testRect();
   g.render();
 }
 </script>
@@ -25,13 +26,20 @@ canvas { border: 2px solid red; }
 </head>
 <body onLoad="draw();">
   <canvas id="gw-canvas" width="800" height="600"></canvas>
-  <label>Function:</label>
-  <input id="function-input" type="text" />
-  <input id="function-submit" type="submit" value="Submit" />
-  <input id="obstacles-clear" type="submit" value="Clear obstacles" />
-  <label>Seed:</label>
-  <input id="obstacles-random-seed" type="text" />
-  <input id="obstacles-regenerate" type="submit" value="Regenerate obstacles" />
+  <span>
+    <label>Function:</label>
+    <input id="function-input" type="text" />
+    <input id="function-submit" type="submit" value="Submit" />
+  </span>
+  <span>
+    <input id="obstacles-clear" type="submit" value="Clear obstacles" />
+    <label>Seed:</label>
+    <input id="obstacles-random-seed" type="text" />
+    <input id="obstacles-regenerate" type="submit" value="Regenerate obstacles" />
+  </span>
+  <div>
+    <div id="timer" class="timer">60</div>
+  </div>
 
 </body>
 </html>

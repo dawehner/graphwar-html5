@@ -1,5 +1,7 @@
+
 var gw = gw || {};
 
+(function ($) {
 /**
  * @todo
  * - Decide what to do with x/y vs. top/left:
@@ -22,12 +24,15 @@ gw.mainObject = function(width, height) {
   this.currentPlayer = 0;
   this.countPlayers = this.players.length;
 
+  this.timerElement = jQuery("#timer");
+
   // Setup config
   this.settings = {
     functionLength: this.canvas.width,
     functionLines: true,
     functionCollisionBorderStop: true,
     functionCollisionObstacleStop: true,
+    timerLength: 60,
   };
 };
 
@@ -50,21 +55,42 @@ gw.mainObject.prototype.setWidth = function(width) {
   this.width = width;
 };
 
+gw.mainObject.prototype.startTimer = function() {
+  var time = this.settings.timerLength;
+  this.time = time;
+  setTimeout(jQuery.proxy(this.updateTimer, this), 50);
+};
+
+gw.mainObject.prototype.updateTimer = function() {
+  this.time = this.time - 50/1000;
+  if (this.time > 0.0) {
+    setTimeout(jQuery.proxy(this.updateTimer, this), 50);
+  }
+  else {
+    this.time = 0.0;
+  }
+
+  this.timerElement.text(this.time.toFixed(2));
+};
+
 /**
  * Set the next player to active.
  */
-gw.mainObject.prototype.nextPlayer() = function() {
+gw.mainObject.prototype.nextPlayer = function() {
   this.currentPlayer++;
   if (this.currentPlayer == this.countPlayers) {
     this.currentPlayer = 0;
   }
+
+
+  this.startTimer();
 }
 
 gw.player = function(playground, name, icon, color) {
   this.name = name;
   this.icon = icon;
   this.color = color;
-  this.playground = playground
+  this.playground = playground;
 
   this.shooters = [];
   this.shooters[0] = new gw.shooter(this, this.playground);
@@ -380,7 +406,6 @@ gw.obstacle.prototype.addHit = function(circle) {
 /**
  * The jquery part.
  */
-(function ($) {
 $(document).ready(function() {
   $("#function-submit").click(function() {
     var func = $("#function-input").val();

@@ -59,7 +59,7 @@ gw.player = function(playground, name, icon, color) {
 };
 
 gw.player.prototype.drawShooters = function() {
-  for (i = 0; i < this.shooters.size; i++) {
+  for (i = 0; i < this.shooters.length; i++) {
     this.shooters[i].draw();
   }
 };
@@ -67,10 +67,12 @@ gw.player.prototype.drawShooters = function() {
 gw.shooter = function(player, playground) {
   this.player = player;
   this.playground = playground;
-  this.icon = new gw.shooterIcon(this, this.playground, undefined, Math.random() * 100, Math.random() * 100);
+
+  Math.seedrandom();
+  this.icon = new gw.shooterIcon(this, this.playground, undefined, Math.random() * this.playground.width, Math.random() * this.playground.height);
 };
 
-gw.shooter.draw = function() {
+gw.shooter.prototype.draw = function() {
   this.icon.draw();
 };
 // gw.shooter.addPlayground = addPlayground;
@@ -85,19 +87,21 @@ gw.shooterIcon = function(shooter, playground, icon, x, y) {
   }
   this.imagepath = icon;
 
-  this.posx = x;
-  this.posy = y;
+  this.left = x;
+  this.top = y;
   this.image = undefined;
 };
 
-gw.shooterIcon.draw = function() {
-  this.image = new fabric.Image.fromURL(this.imagepath);
-  this.playground.add(this.image);
+gw.shooterIcon.prototype.draw = function() {
+  var playground = this.playground;
+  var shooterIcon = this;
+  fabric.Image.fromURL(this.imagepath, function(img) {
+    img.set('left', shooterIcon.left);
+    img.set('top', shooterIcon.top);
+    playground.canvas.add(img);
+    shooterIcon.image = img;
+  });
 };
-// gw.shooterIcon.addPlayground = addPlayground;
-
-gw.executeFunction = function(expression) { };
-
 
 /**
  * Here the actual things are drawn into.
@@ -263,8 +267,8 @@ gw.playground.prototype.drawFunction = function(express, xstart, xend, steps) {
         if (collisionResult) {
           console.log("collision");
 //           console.log(this.obstacles[j].circle.left);
-          console.log(line);
-          this.obstacles[i]
+//           console.log(line);
+//           this.obstacles[i]
 
           break_on_next = true;
         }
@@ -356,8 +360,8 @@ gw.obstacle = function(circle) {
 };
 
 gw.obstacle.prototype.addHit = function(circle) {
-  this.hits.push(new gw.obstacle(circle));
-}
+//   this.hits.push(new gw.obstacle(circle));
+};
 
 
 /**

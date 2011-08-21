@@ -19,6 +19,8 @@ gw.mainObject = function(width, height) {
   this.players = [new gw.player(this.playground, "foo1"), new gw.player(this.playground, "foo2")];
   this.players[0].drawShooters();
   this.players[1].drawShooters();
+  this.currentPlayer = 0;
+  this.countPlayers = this.players.length;
 
   // Setup config
   this.settings = {
@@ -47,6 +49,16 @@ gw.mainObject.prototype.render = function() {
 gw.mainObject.prototype.setWidth = function(width) {
   this.width = width;
 };
+
+/**
+ * Set the next player to active.
+ */
+gw.mainObject.prototype.nextPlayer() = function() {
+  this.currentPlayer++;
+  if (this.currentPlayer == this.countPlayers) {
+    this.currentPlayer = 0;
+  }
+}
 
 gw.player = function(playground, name, icon, color) {
   this.name = name;
@@ -375,6 +387,7 @@ $(document).ready(function() {
 
     var expr = Parser.parse(func);
     g.playground.drawFunction(expr, -100, 100);
+    g.nextPlayer();
   });
   $("#obstacles-clear").click(function() {
     g.playground.clearObstacles();
